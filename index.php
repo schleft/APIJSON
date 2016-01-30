@@ -24,14 +24,12 @@
 
 	$fileNantesJSON = file_get_contents($lienAdresse);
 	$fileNantes = json_decode($fileNantesJSON, true);
-	var_dump("<pre>",$fileNantes["results"][0]["geometry"]["location"],"</pre>");
 
 echo("
 <script>
 	var lat =". $fileNantes["results"][0]["geometry"]["location"]["lat"] ."
 	var lon =". $fileNantes["results"][0]["geometry"]["location"]["lng"] ."
-	map = L.map('map').setView([lat, lon], 13);");
-echo("
+	map = L.map('map').setView([lat, lon], 13);
 
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
 		maxZoom: 18,
@@ -41,4 +39,27 @@ echo("
 		id: 'mapbox.streets'
 	}).addTo(map);
 </script>");
+var_dump("<pre>",$fileCircu,"</pre>");
+foreach ($fileCircu["data"] as $key => $value){
+	foreach($value as $cle => $valeur){
+		echo($cle." / ".$valeur."<br/>");
+		if($cle == "Secteur"){
+			$lienAdresse = str_replace(" ", "%20", "https://maps.googleapis.com/maps/api/geocode/json?address=". $valeur ."&key=AIzaSyDeHMq1KiQk6pR_GhXAmsz6OhfKBnmiiWY");
+			$fileNantesJSON = file_get_contents($lienAdresse);
+			$fileNantes = json_decode($fileNantesJSON, true);	
+			//var_dump($valeur);
+			//echo("<hr>");
+		}
+
+		if($cle == "Detail"){
+			echo("<br/>");
+			echo('
+<script>
+	L.marker(['. $fileNantes["results"][0]["geometry"]["location"]["lat"] .','. $fileNantes["results"][0]["geometry"]["location"]["lng"] .']).addTo(map)
+			.bindPopup("'. $valeur .'");
+
+</script>');
+		}
+	}
+}	
 ?>
