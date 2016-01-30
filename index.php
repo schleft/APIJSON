@@ -23,9 +23,9 @@
 	//var_dump($fileCircu["data"][0]);
 
 	if(isset($_GET["adresse"])){
-		$lienAdresse = "https://maps.googleapis.com/maps/api/geocode/json?address=". $_GET["adresse"] ."&key=AIzaSyDeHMq1KiQk6pR_GhXAmsz6OhfKBnmiiWY";
+		$lienAdresse = str_replace(" ", "%20", "https://maps.googleapis.com/maps/api/geocode/json?address=". $_GET["adresse"] ."&key=AIzaSyDeHMq1KiQk6pR_GhXAmsz6OhfKBnmiiWY");
 	}else{
-		$lienAdresse = "https://maps.googleapis.com/maps/api/geocode/json?address=nantes&key=AIzaSyDeHMq1KiQk6pR_GhXAmsz6OhfKBnmiiWY";
+		$lienAdresse = str_replace(" ", "%20", "https://maps.googleapis.com/maps/api/geocode/json?address=nantes&key=AIzaSyDeHMq1KiQk6pR_GhXAmsz6OhfKBnmiiWY");
 	}
 
 	$fileNantesJSON = file_get_contents($lienAdresse);
@@ -56,7 +56,7 @@ foreach ($fileCircu["data"] as $key => $value){
 			//echo("<hr>");
 		}
 
-		if($cle == "Detail"){
+		if($cle == "Secteur"){
 			echo('
 <script>
 	L.marker(['. $fileNantes["results"][0]["geometry"]["location"]["lat"] .','. $fileNantes["results"][0]["geometry"]["location"]["lng"] .']).addTo(map)
