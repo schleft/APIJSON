@@ -10,6 +10,9 @@
 </head>
 <body>
 	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+	<form>
+  		Location: <input type="text" name="adresse"><br>
+  	</form>
 	<div id="map" style="width: 600px; height: 400px"></div>
 </body>
 <?php
@@ -19,8 +22,11 @@
 	$fileCircu = json_decode($fileCircuJson,true);
 	//var_dump($fileCircu["data"][0]);
 
-
-	$lienAdresse = "https://maps.googleapis.com/maps/api/geocode/json?address=nantes&key=AIzaSyDeHMq1KiQk6pR_GhXAmsz6OhfKBnmiiWY";
+	if(isset($_GET["adresse"])){
+		$lienAdresse = "https://maps.googleapis.com/maps/api/geocode/json?address=". $_GET["adresse"] ."&key=AIzaSyDeHMq1KiQk6pR_GhXAmsz6OhfKBnmiiWY";
+	}else{
+		$lienAdresse = "https://maps.googleapis.com/maps/api/geocode/json?address=nantes&key=AIzaSyDeHMq1KiQk6pR_GhXAmsz6OhfKBnmiiWY";
+	}
 
 	$fileNantesJSON = file_get_contents($lienAdresse);
 	$fileNantes = json_decode($fileNantesJSON, true);
@@ -42,7 +48,6 @@ echo("
 var_dump("<pre>",$fileCircu,"</pre>");
 foreach ($fileCircu["data"] as $key => $value){
 	foreach($value as $cle => $valeur){
-		echo($cle." / ".$valeur."<br/>");
 		if($cle == "Secteur"){
 			$lienAdresse = str_replace(" ", "%20", "https://maps.googleapis.com/maps/api/geocode/json?address=". $valeur ."&key=AIzaSyDeHMq1KiQk6pR_GhXAmsz6OhfKBnmiiWY");
 			$fileNantesJSON = file_get_contents($lienAdresse);
@@ -52,7 +57,6 @@ foreach ($fileCircu["data"] as $key => $value){
 		}
 
 		if($cle == "Detail"){
-			echo("<br/>");
 			echo('
 <script>
 	L.marker(['. $fileNantes["results"][0]["geometry"]["location"]["lat"] .','. $fileNantes["results"][0]["geometry"]["location"]["lng"] .']).addTo(map)
