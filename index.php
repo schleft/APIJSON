@@ -48,7 +48,7 @@ echo("
 var_dump("<pre>",$fileCircu,"</pre>");
 foreach ($fileCircu["data"] as $key => $value){
 	foreach($value as $cle => $valeur){
-		if($cle == "Secteur"){
+		if($cle == "Nom"){
 			$lienAdresse = str_replace(" ", "%20", "https://maps.googleapis.com/maps/api/geocode/json?address=". $valeur ."&key=AIzaSyDeHMq1KiQk6pR_GhXAmsz6OhfKBnmiiWY");
 			$fileNantesJSON = file_get_contents($lienAdresse);
 			$fileNantes = json_decode($fileNantesJSON, true);	
@@ -56,7 +56,7 @@ foreach ($fileCircu["data"] as $key => $value){
 			//echo("<hr>");
 		}
 
-		if($cle == "Secteur"){
+		if($cle == "Detail" && $fileNantes["status"] == "OK"){
 			echo('
 <script>
 	L.marker(['. $fileNantes["results"][0]["geometry"]["location"]["lat"] .','. $fileNantes["results"][0]["geometry"]["location"]["lng"] .']).addTo(map)
